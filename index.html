@@ -1,5 +1,4 @@
 
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -106,42 +105,50 @@
 
 <body>
 
+
+
+
 <div id="filter-container">
     <div style="display: flex; flex-direction: column; align-items: center;">
         
-        <!-- Slider Section -->
         <div style="display: flex; align-items: center; gap: 15px;">
             <label><b>Year: </b></label>
-            <!-- Set fixed width here -->
-            <input type="range" id="yearSlider" min="2021" max="2025" value="2021" step="1" list="steplist" style="width: 300px;">
-            <span id="yearLabel" style="font-weight: bold; width: 40px;">2021</span>
+            <input type="range" id="yearSlider" min="2000" max="2025" value="2025" step="1" list="steplist" style="width: 400px;">
+            <span id="yearLabel" style="font-weight: bold; width: 40px;">2025</span>
         </div>
         
-        <!-- Labels Section: Width must match the slider (300px) -->
-        <div style="display: flex; justify-content: space-between; width: 300px; font-size: 11px; color: #666; font-weight: bold; padding-top: 5px; margin-left: 55px;">
-            <span style="width: 20px; text-align: center;">2021</span>
-            <span style="width: 20px; text-align: center;">2022</span>
-            <span style="width: 20px; text-align: center;">2023</span>
-            <span style="width: 20px; text-align: center;">2024</span>
-            <span style="width: 20px; text-align: center;">2025</span>
+        <div style="display: flex; justify-content: space-between; width: 400px; font-size: 11px; color: #666; font-weight: bold; padding-top: 5px; margin-left: 55px;">
+            <span>2000</span>
+            <span>2005</span>
+            <span>2010</span>
+            <span>2015</span>
+            <span>2020</span>
+            <span>2025</span>
         </div>
 
-        <!-- This creates the visual "tick marks" on the slider track -->
         <datalist id="steplist">
-            <option value="2021"></option>
-            <option value="2022"></option>
-            <option value="2023"></option>
-            <option value="2024"></option>
+            <option value="2000"></option>
+            <option value="2005"></option>
+            <option value="2010"></option>
+            <option value="2015"></option>
+            <option value="2020"></option>
             <option value="2025"></option>
         </datalist>
     </div>
 </div>
 
+
+
+
+
+
+
+
 <!-- The container where the map will be injected -->
 <div id="mapdiv"></div>
 
 <script>
-    /* 1. INITIALIZE MAP: Set center to Alaska [Lat, Lon] and zoom level to 6 */
+    /* 1. INITIALIZE MAP: Set center to California [Lat, Lon] and zoom level to 6 */
     var map = L.map('mapdiv').setView([37.25, -119.0], 6);
 
     /* 2. BASE LAYER: Load OpenStreetMap tiles so we have a visible map background */
@@ -155,14 +162,18 @@ var titleBox = L.control({ position: 'topleft' });
 
 titleBox.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'map-title');
-    div.innerHTML = `
-        <h3>California Earthquake Analysis</h3>
-        <p>This map analyzes California earthquakes by <b>magnitude</b> for the years 2021 through 2025.</p>
-        <p><b>Source:</b> <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">USGS Earthquake Catalog</a></p>
-        <p style="color: #666; font-style: italic; font-size: 11px; margin-top: 8px;">
-            Created by Georg Weggener in March 2026
-        </p>
-    `;
+
+
+
+
+div.innerHTML = `
+    <h3>California Earthquake Analysis</h3>
+    <p>This map analyzes California earthquakes by <b>magnitude</b> for the years 2000 through 2025.</p>
+    <p><b>Source:</b> <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">USGS Earthquake Catalog</a></p>
+    <p style="color: #666; font-style: italic; font-size: 11px; margin-top: 8px;">
+        Created by Georg Weggener in March 2026
+    </p>
+`;
     return div;
 };
 
@@ -200,10 +211,6 @@ function getColor(mag) {
     return "#FFD700";                // Light (Below 4.49) - Gold/Yellow
 }
 
-
-
-
-
 /* 6. LEGEND: Updated to reflect actual data range (4.4 to 7.1) */
 var combinedLegend = L.control({ position: "bottomright" });
 
@@ -211,12 +218,12 @@ combinedLegend.onAdd = function (map) {
     var div = L.DomUtil.create("div", "info legend");
     
     // Updated these values to represent your actual data spread
-    var mags = [4.4, 4.745, 5.245, 7.1]; 
+    var mags = [4.4, 4.5, 5.0, 5.5, 7.1]; 
 
     div.innerHTML = `<h4>Magnitude</h4>`;
 
     mags.forEach(function (m) {
-        var size = Math.max(m * 4, 2); 
+        var size = Math.max(m * 3, 2); 
         var color = getColor(m);       
         
         // Added .toFixed(1) to ensure the decimals show up nicely (e.g., 7.1)
@@ -230,13 +237,6 @@ combinedLegend.onAdd = function (map) {
     return div;
 };
 combinedLegend.addTo(map);
-
-
-
-
-
-
-
 
 var allQuakes = []; // Global storage for CSV data
 var markerLayer = L.layerGroup().addTo(map); // Layer to manage markers
