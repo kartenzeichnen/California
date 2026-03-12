@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>California Earthquake Map</title>
+
+    <!-- Leaflet CSS: Essential for map styling and marker placement -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JS: The engine that creates the interactive map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- PapaParse: A library used to read and convert CSV files into JavaScript objects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        /* Make the map fill the entire browser window */
+        body { margin:0; padding:0; }
+        #mapdiv { height: 100vh; width: 100vw; }
+
+/* Style for the Title/Info box in the upper left */
+.map-title {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    max-width: 300px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+.map-title h3 { margin: 0 0 5px; font-size: 16px; }
+.map-title p { margin: 3px 0; font-size: 12px; line-height: 1.4; }
+.map-title a { color: #0078A8; text-decoration: none; }
+
+        /* Styling for the Legend box in the bottom right */
+        .legend {
+            background: white;
+            padding: 10px 12px;
+            line-height: 18px;
+            color: #333;
+            border-radius: 6px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            width: 210px;
+            font-size: 13px;
+        }
+
+        .legend h4 { margin: 0 0 6px; font-size: 14px; font-weight: bold; }
+        .legend .divider { border-top: 1px solid #ccc; margin: 8px 0; }
+
+/* This ensures the colored square and text stay on the same line */
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px; /* Space between rows */
+}
+
+        /* Small colored squares in the legend representing depth */
+.legend i {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px; /* Space between square and text */
+    opacity: 0.8;
+    flex-shrink: 0;     /* Prevents the square from squishing */
+    display: inline-block;
+}
+
+        /* Circles in the legend representing magnitude size */
+        .legend .circle {
+            display: inline-block;
+            border-radius: 50%;
+            background: #666;
+            opacity: 0.7;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Container for the SVG Compass Rose */
+        .compass-rose {
+            background: white;
+            padding: 6px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.3);
+        }
+
+#filter-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: 2px solid rgba(0,0,0,0.2);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+#yearSlider {
+    width: 200px;
+    cursor: pointer;
+}
+
+    </style>
+
+</head>
+
+<body>
+
+<div id="filter-container">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        
+        <!-- Slider Section -->
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <label><b>Year: </b></label>
+            <!-- Set fixed width here -->
+            <input type="range" id="yearSlider" min="2021" max="2025" value="2021" step="1" list="steplist" style="width: 300px;">
+            <span id="yearLabel" style="font-weight: bold; width: 40px;">2021</span>
+        </div>
+        
+        <!-- Labels Section: Width must match the slider (300px) -->
+        <div style="display: flex; justify-content: space-between; width: 300px; font-size: 11px; color: #666; font-weight: bold; padding-top: 5px; margin-left: 55px;">
+            <span style="width: 20px; text-align: center;">2021</span>
+            <span style="width: 20px; text-align: center;">2022</span>
+            <span style="width: 20px; text-align: center;">2023</span>
+            <span style="width: 20px; text-align: center;">2024</span>
+            <span style="width: 20px; text-align: center;">2025</span>
+        </div>
+
+        <!-- This creates the visual "tick marks" on the slider track -->
+        <datalist id="steplist">
+            <option value="2021"></option>
+            <option value="2022"></option>
+            <option value="2023"></option>
+            <option value="2024"></option>
+            <option value="2025"></option>
+        </datalist>
+    </div>
+</div>
+
+<!-- The container where the map will be injected -->
+<div id="mapdiv"></div>
+
+<script>
+    /* 1. INITIALIZE MAP: Set center to Alaska [Lat, Lon] and zoom level to 6 */
+    var map = L.map('mapdiv').setView([37.25, -119.0], 6);
+
+    /* 2. BASE LAYER: Load OpenStreetMap tiles so we have a visible map background */
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org">OpenStreetMap</a>'
+    }).addTo(map);
+
+/* Create a custom control for the Title and Data Info */
+var titleBox = L.control({ position: 'topleft' });
+
+titleBox.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'map-title');
+    div.innerHTML = `
+        <h3>California Earthquake Analysis</h3>
+        <p>This map analyzes California earthquakes by <b>depth</b> for the years 2021 through 2025.</p>
+        <p><b>Source:</b> <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">USGS Earthquake Catalog</a></p>
+        <p style="color: #666; font-style: italic; font-size: 11px; margin-top: 8px;">
+            Created by Georg Weggener in March 2026
+        </p>
+    `;
+    return div;
+};
+
+titleBox.addTo(map);
+
+    /* 3. SCALE BAR: Adds a scale in miles/kilometers to the bottom left */
+    L.control.scale({
+        position: 'bottomleft',
+        imperial: true,
+        metric: true
+    }).addTo(map);
+
+/* 4. SIMPLE COMPASS: A clean North arrow */
+    var compassRose = L.control({ position: 'topright' });
+
+    compassRose.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'compass-rose');
+        div.innerHTML = `
+        <svg width="50" height="50" viewBox="0 0 100 100">
+            <!-- Simple North Arrow -->
+            <polygon points="50,5 35,90 50,75 65,90" fill="black" stroke="black" stroke-width="2"/>
+            <text x="50" y="25" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="white">N</text>
+        </svg>
+        `;
+        return div;
+    };
+
+    compassRose.addTo(map);
+
+
+/* 5. HELPER FUNCTION: Returns a color hex code based on the earthquake's depth */
+function getColor(depth) {
+    if (mag <= 4.4) return "#FFFF00";    // Shallow = Bright Yellow
+    if (mag <= 5.5) return "#00FF00";    // Moderate = Green
+    if (mag <= 6.1) return "#FF0000";   // Deep = Red 
+    return "#4B0082";                     // Very Deep = Indigo/Dark Blue
+}
+
+
+    /* 6. LEGEND: Create the box that explains colors and circle sizes */
+    var combinedLegend = L.control({ position: "bottomright" });
+
+    combinedLegend.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "info legend");
+        var mags = [3, 5, 7]; 
+
+div.innerHTML = `
+    <h4>Earthquake Depth</h4>
+    <div class="legend-item"><i style="background:#FFFF00; border: 1px solid #ccc;"></i> 0–40 km (Shallow)</div>
+    <div class="legend-item"><i style="background:#00FF00"></i> 40.1–90 km (Moderate)</div>
+    <div class="legend-item"><i style="background:#FF0000"></i> 90.1–140 km (Deep)</div>
+    <div class="legend-item"><i style="background:#4B0082"></i> > 140.1 km (Very Deep)</div>
+    <div class="divider"></div>
+    <h4>Magnitude</h4>
+`;
+
+        // Loop through the example magnitudes to create visual circle size indicators
+        mags.forEach(function (m) {
+            var size = Math.max(m * 1.5, 2); // Matched to marker radius logic
+            div.innerHTML += `
+                <div style="margin-bottom: 4px;">
+                    <span class="circle" style="width:${size * 2}px; height:${size * 2}px;"></span>
+                    M ${m}
+                </div>`;
+        });
+        return div;
+    };
+    combinedLegend.addTo(map);
+
+var allQuakes = []; // Global storage for CSV data
+var markerLayer = L.layerGroup().addTo(map); // Layer to manage markers
+
+// 7. Load the CSV Data
+Papa.parse("Earthquakes.csv", {
+    download: true,
+    header: true,
+    complete: function(results) {
+        allQuakes = results.data;
+        updateMap("2025"); // Initial display
+    }
+});
+
+// 8. Function to filter and draw markers
+    function updateMap(selectedYear) {
+        markerLayer.clearLayers(); 
+        
+        allQuakes.forEach(function(row) {
+            if (row.time && row.time.startsWith(selectedYear)) {
+                var lat = Number(row.latitude);
+                var lon = Number(row.longitude);
+                var mag = Number(row.mag);
+                var depth = Number(row.depth);
+
+                if (isFinite(lat) && isFinite(lon)) {
+                    var marker = L.circleMarker([lat, lon], {
+                        radius: Math.max(mag * 2.5, 2), 
+                        fillColor: getColor(depth), // The high-contrast color
+                        color: "#333",              // Dark gray border for contrast
+                        weight: 0.5,                // Thin border line
+                        fillOpacity: 0.8            // Slightly more opaque for gray maps
+                    }).bindPopup(`
+                        <b>Year:</b> ${selectedYear}<br>
+                        <b>Magnitude:</b> ${mag}<br>
+                        <b>Depth:</b> ${depth} km
+                    `);
+                    
+                    markerLayer.addLayer(marker);
+                }
+            }
+        });
+    }
+
+// 9. Slider Event Listener
+document.getElementById('yearSlider').addEventListener('input', function(e) {
+    var year = e.target.value;
+    document.getElementById('yearLabel').innerText = year;
+    updateMap(year);
+});
+
+</script>
+
+</body>
+
+</html>
