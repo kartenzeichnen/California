@@ -105,9 +105,6 @@
 
 <body>
 
-
-
-
 <div id="filter-container">
     <div style="display: flex; flex-direction: column; align-items: center;">
         
@@ -137,13 +134,6 @@
     </div>
 </div>
 
-
-
-
-
-
-
-
 <!-- The container where the map will be injected -->
 <div id="mapdiv"></div>
 
@@ -162,9 +152,6 @@ var titleBox = L.control({ position: 'topleft' });
 
 titleBox.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'map-title');
-
-
-
 
 div.innerHTML = `
     <h3>California Earthquake Analysis</h3>
@@ -203,34 +190,36 @@ titleBox.addTo(map);
 
     compassRose.addTo(map);
 
-/* 5. UPDATED HELPER FUNCTION: Colors tailored to 4.4 - 7.1 range */
+/* 5. UPDATED HELPER FUNCTION: Thresholds synced with Legend */
 function getColor(mag) {
-    if (mag >= 5.5) return "#4B0082"; // Major (5.5+) - Indigo
-    if (mag >= 5.0) return "#FF0000"; // Strong (5.0 - 5.49) - Red
-    if (mag >= 4.5) return "#FF8C00"; // Moderate (4.5 - 4.99) - Dark Orange
-    return "#FFD700";                // Light (Below 4.49) - Gold/Yellow
+    if (mag >= 5.5) return "#4B0082"; // Major
+    if (mag >= 5.0) return "#FF0000"; // Strong
+    if (mag >= 4.7) return "#FF8C00"; // Moderate
+    return "#FFD700";                // Light (4.4 - 4.69)
 }
 
-/* 6. LEGEND: Updated to reflect actual data range (4.4 to 7.1) */
+/* 6. LEGEND: Custom categories for Light, Moderate, Strong, and Major */
 var combinedLegend = L.control({ position: "bottomright" });
 
 combinedLegend.onAdd = function (map) {
     var div = L.DomUtil.create("div", "info legend");
-    
-    // Updated these values to represent your actual data spread
-    var mags = [4.4, 4.5, 5.0, 5.5, 7.1]; 
-
     div.innerHTML = `<h4>Magnitude</h4>`;
 
-    mags.forEach(function (m) {
-        var size = Math.max(m * 3, 2); 
-        var color = getColor(m);       
-        
-        // Added .toFixed(1) to ensure the decimals show up nicely (e.g., 7.1)
+    // Manually defining the 4 rows to match your requirements
+    // We use a representative magnitude for the getColor and circle size logic
+    var categories = [
+        { label: "M 4.4–4.69 (Light)",    val: 4.4, color: "#FFD700" },
+        { label: "M 4.7–4.99 (Moderate)", val: 4.8, color: "#FF8C00" },
+        { label: "M 5.0–5.49 (Strong)",   val: 5.2, color: "#FF0000" },
+        { label: "M 5.5–7.0+ (Major)",    val: 6.5, color: "#4B0082" }
+    ];
+
+    categories.forEach(function (cat) {
+        var size = Math.max(cat.val * 4, 2); 
         div.innerHTML += `
             <div style="margin-bottom: 8px; display: flex; align-items: center;">
-                <span class="circle" style="width:${size * 2}px; height:${size * 2}px; background:${color}; border: 1px solid #000;"></span>
-                <span style="margin-left: 8px;">M ${m.toFixed(1)}</span>
+                <span class="circle" style="width:${size * 2}px; height:${size * 2}px; background:${cat.color}; border: 1px solid #000;"></span>
+                <span style="margin-left: 8px;">${cat.label}</span>
             </div>`;
     });
 
@@ -286,7 +275,5 @@ document.getElementById('yearSlider').addEventListener('input', function(e) {
 });
 
 </script>
-
 </body>
-
 </html>
