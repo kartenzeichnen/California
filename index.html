@@ -192,38 +192,51 @@ titleBox.addTo(map);
 
     compassRose.addTo(map);
 
-/* 5. UPDATED HELPER FUNCTION: Colors based on Magnitude */
+/* 5. UPDATED HELPER FUNCTION: Colors tailored to 4.4 - 7.1 range */
 function getColor(mag) {
-    if (mag >= 7) return "#4B0082"; // Large - Indigo
-    if (mag >= 5) return "#FF0000"; // Medium - Red
-    if (mag >= 3) return "#FFD700"; // Small - Gold/Yellow
-    return "#666666";               // Micro - Gray
+    if (mag >= 5.5) return "#4B0082"; // Major (5.5+) - Indigo
+    if (mag >= 5.0) return "#FF0000"; // Strong (5.0 - 5.49) - Red
+    if (mag >= 4.5) return "#FF8C00"; // Moderate (4.5 - 4.99) - Dark Orange
+    return "#FFD700";                // Light (Below 4.49) - Gold/Yellow
 }
 
-/* 6. LEGEND: Only displaying Magnitude now */
+
+
+
+
+/* 6. LEGEND: Updated to reflect actual data range (4.4 to 7.1) */
 var combinedLegend = L.control({ position: "bottomright" });
 
 combinedLegend.onAdd = function (map) {
     var div = L.DomUtil.create("div", "info legend");
-    var mags = [3, 5, 7]; 
+    
+    // Updated these values to represent your actual data spread
+    var mags = [4.4, 4.745, 5.245, 7.1]; 
 
-    // We removed the Depth header and the color <i> tags here
     div.innerHTML = `<h4>Magnitude</h4>`;
 
-// Loop through the example magnitudes to create visual indicators
-mags.forEach(function (m) {
-    var size = Math.max(m * 4, 2); // Match the radius logic above
-    var color = getColor(m);       // Match the color logic above
-    div.innerHTML += `
-        <div style="margin-bottom: 8px; display: flex; align-items: center;">
-            <span class="circle" style="width:${size * 2}px; height:${size * 2}px; background:${color}; border: 1px solid #000;"></span>
-            <span style="margin-left: 8px;">M ${m}</span>
-        </div>`;
-});
+    mags.forEach(function (m) {
+        var size = Math.max(m * 4, 2); 
+        var color = getColor(m);       
+        
+        // Added .toFixed(1) to ensure the decimals show up nicely (e.g., 7.1)
+        div.innerHTML += `
+            <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                <span class="circle" style="width:${size * 2}px; height:${size * 2}px; background:${color}; border: 1px solid #000;"></span>
+                <span style="margin-left: 8px;">M ${m.toFixed(1)}</span>
+            </div>`;
+    });
 
     return div;
 };
 combinedLegend.addTo(map);
+
+
+
+
+
+
+
 
 var allQuakes = []; // Global storage for CSV data
 var markerLayer = L.layerGroup().addTo(map); // Layer to manage markers
