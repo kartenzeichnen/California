@@ -234,7 +234,7 @@ var allQuakes = []; // Global storage for CSV data
 var markerLayer = L.layerGroup().addTo(map); // Layer to manage markers
 
 // 7. Load the CSV Data
-Papa.parse("Earthquakes.csv", {
+Papa.parse("Original Earthquakes.csv", {
     download: true,
     header: true,
     complete: function(results) {
@@ -283,5 +283,6 @@ document.getElementById('yearSlider').addEventListener('input', function(e) {
 </script>
 
 </body>
+
 
 </html>
