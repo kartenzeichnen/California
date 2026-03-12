@@ -108,6 +108,9 @@
 <div id="filter-container">
     <div style="display: flex; flex-direction: column; align-items: center;">
         
+<div style="margin-bottom: 10px; font-size: 14px; color: #333;">
+    <b>Total Earthquakes: </b><span id="quakeCount" style="color: #0078A8; font-weight: bold;">0</span>
+</div>
         <div style="display: flex; align-items: center; gap: 15px;">
             <label><b>Year: </b></label>
             <input type="range" id="yearSlider" min="2000" max="2025" value="2025" step="1" list="steplist" style="width: 400px;">
@@ -241,31 +244,34 @@ Papa.parse("Original Earthquakes.csv", {
 });
 
 // 8. Function to filter and draw markers
-    function updateMap(selectedYear) {
-        markerLayer.clearLayers(); 
-        
-allQuakes.forEach(function(row) {
-    if (row.time && row.time.startsWith(selectedYear)) {
-        var lat = Number(row.latitude);
-        var lon = Number(row.longitude);
-        var mag = Number(row.mag);
+function updateMap(selectedYear) {
+    markerLayer.clearLayers(); 
+    var count = 0; // Initialize counter
 
-        if (isFinite(lat) && isFinite(lon)) {
-            var marker = L.circleMarker([lat, lon], {
-                // Multiplier increased to 4 to make size differences more obvious
-                radius: Math.max(mag * 4, 2), 
-                fillColor: getColor(mag),    // Now using our new Magnitude color logic
-                color: "#000",               // Black border
-                weight: 1,
-                fillOpacity: 0.7
-            }).bindPopup(`<b>Magnitude:</b> ${mag}<br><b>Year:</b> ${selectedYear}`);
-            
-            markerLayer.addLayer(marker);
+    allQuakes.forEach(function(row) {
+        if (row.time && row.time.startsWith(selectedYear)) {
+            var lat = Number(row.latitude);
+            var lon = Number(row.longitude);
+            var mag = Number(row.mag);
+
+            if (isFinite(lat) && isFinite(lon)) {
+                count++; // Increment count for every valid quake found
+                var marker = L.circleMarker([lat, lon], {
+                    radius: Math.max(mag * 4, 2), 
+                    fillColor: getColor(mag),
+                    color: "#000",
+                    weight: 1,
+                    fillOpacity: 0.7
+                }).bindPopup(`<b>Magnitude:</b> ${mag}<br><b>Year:</b> ${selectedYear}`);
+                
+                markerLayer.addLayer(marker);
+            }
         }
-    }
-});
+    });
 
-    }
+    // Update the HTML element with the final count
+    document.getElementById('quakeCount').innerText = count.toLocaleString();
+}
 
 // 9. Slider Event Listener
 document.getElementById('yearSlider').addEventListener('input', function(e) {
