@@ -192,43 +192,41 @@ titleBox.addTo(map);
 
 
 /* 5. HELPER FUNCTION: Returns a color hex code based on the earthquake's depth */
+// Note: I fixed the variable here so it correctly checks 'depth'
 function getColor(depth) {
-    if (mag <= 4.4) return "#FFFF00";    // Shallow = Bright Yellow
-    if (mag <= 5.5) return "#00FF00";    // Moderate = Green
-    if (mag <= 6.1) return "#FF0000";   // Deep = Red 
-    return "#4B0082";                     // Very Deep = Indigo/Dark Blue
+    if (depth <= 40) return "#FFFF00";   // Shallow
+    if (depth <= 90) return "#00FF00";   // Moderate
+    if (depth <= 140) return "#FF0000";  // Deep 
+    return "#4B0082";                    // Very Deep
 }
 
+/* 6. LEGEND: Only displaying Magnitude now */
+var combinedLegend = L.control({ position: "bottomright" });
 
-    /* 6. LEGEND: Create the box that explains colors and circle sizes */
-    var combinedLegend = L.control({ position: "bottomright" });
+combinedLegend.onAdd = function (map) {
+    var div = L.DomUtil.create("div", "info legend");
+    var mags = [3, 5, 7]; 
 
-    combinedLegend.onAdd = function (map) {
-        var div = L.DomUtil.create("div", "info legend");
-        var mags = [3, 5, 7]; 
+    // We removed the Depth header and the color <i> tags here
+    div.innerHTML = `<h4>Magnitude</h4>`;
 
-div.innerHTML = `
-    <h4>Earthquake Depth</h4>
-    <div class="legend-item"><i style="background:#FFFF00; border: 1px solid #ccc;"></i> 0–40 km (Shallow)</div>
-    <div class="legend-item"><i style="background:#00FF00"></i> 40.1–90 km (Moderate)</div>
-    <div class="legend-item"><i style="background:#FF0000"></i> 90.1–140 km (Deep)</div>
-    <div class="legend-item"><i style="background:#4B0082"></i> > 140.1 km (Very Deep)</div>
-    <div class="divider"></div>
-    <h4>Magnitude</h4>
-`;
+    // Loop through the example magnitudes to create visual circle size indicators
+    mags.forEach(function (m) {
+        // Calculation matched to your updateMap logic for visual consistency
+        var size = Math.max(m * 2.5, 2); 
+        div.innerHTML += `
+            <div style="margin-bottom: 4px; display: flex; align-items: center;">
+                <span class="circle" style="width:${size * 2}px; height:${size * 2}px;"></span>
+                M ${m}
+            </div>`;
+    });
+    return div;
+};
+combinedLegend.addTo(map);
 
-        // Loop through the example magnitudes to create visual circle size indicators
-        mags.forEach(function (m) {
-            var size = Math.max(m * 1.5, 2); // Matched to marker radius logic
-            div.innerHTML += `
-                <div style="margin-bottom: 4px;">
-                    <span class="circle" style="width:${size * 2}px; height:${size * 2}px;"></span>
-                    M ${m}
-                </div>`;
-        });
-        return div;
-    };
-    combinedLegend.addTo(map);
+
+
+
 
 var allQuakes = []; // Global storage for CSV data
 var markerLayer = L.layerGroup().addTo(map); // Layer to manage markers
@@ -286,3 +284,4 @@ document.getElementById('yearSlider').addEventListener('input', function(e) {
 
 
 </html>
+
