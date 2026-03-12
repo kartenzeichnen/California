@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -155,7 +157,7 @@ titleBox.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'map-title');
     div.innerHTML = `
         <h3>California Earthquake Analysis</h3>
-        <p>This map analyzes California earthquakes by <b>depth</b> for the years 2021 through 2025.</p>
+        <p>This map analyzes California earthquakes by <b>magnitude</b> for the years 2021 through 2025.</p>
         <p><b>Source:</b> <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">USGS Earthquake Catalog</a></p>
         <p style="color: #666; font-style: italic; font-size: 11px; margin-top: 8px;">
             Created by Georg Weggener in March 2026
@@ -190,14 +192,12 @@ titleBox.addTo(map);
 
     compassRose.addTo(map);
 
-
-/* 5. HELPER FUNCTION: Returns a color hex code based on the earthquake's depth */
-// Note: I fixed the variable here so it correctly checks 'depth'
-function getColor(depth) {
-    if (depth <= 40) return "#FFFF00";   // Shallow
-    if (depth <= 90) return "#00FF00";   // Moderate
-    if (depth <= 140) return "#FF0000";  // Deep 
-    return "#4B0082";                    // Very Deep
+/* 5. UPDATED HELPER FUNCTION: Colors based on Magnitude */
+function getColor(mag) {
+    if (mag >= 7) return "#4B0082"; // Large - Indigo
+    if (mag >= 5) return "#FF0000"; // Medium - Red
+    if (mag >= 3) return "#FFD700"; // Small - Gold/Yellow
+    return "#666666";               // Micro - Gray
 }
 
 /* 6. LEGEND: Only displaying Magnitude now */
@@ -210,23 +210,20 @@ combinedLegend.onAdd = function (map) {
     // We removed the Depth header and the color <i> tags here
     div.innerHTML = `<h4>Magnitude</h4>`;
 
-    // Loop through the example magnitudes to create visual circle size indicators
-    mags.forEach(function (m) {
-        // Calculation matched to your updateMap logic for visual consistency
-        var size = Math.max(m * 2.5, 2); 
-        div.innerHTML += `
-            <div style="margin-bottom: 4px; display: flex; align-items: center;">
-                <span class="circle" style="width:${size * 2}px; height:${size * 2}px;"></span>
-                M ${m}
-            </div>`;
-    });
+// Loop through the example magnitudes to create visual indicators
+mags.forEach(function (m) {
+    var size = Math.max(m * 4, 2); // Match the radius logic above
+    var color = getColor(m);       // Match the color logic above
+    div.innerHTML += `
+        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+            <span class="circle" style="width:${size * 2}px; height:${size * 2}px; background:${color}; border: 1px solid #000;"></span>
+            <span style="margin-left: 8px;">M ${m}</span>
+        </div>`;
+});
+
     return div;
 };
 combinedLegend.addTo(map);
-
-
-
-
 
 var allQuakes = []; // Global storage for CSV data
 var markerLayer = L.layerGroup().addTo(map); // Layer to manage markers
@@ -245,30 +242,27 @@ Papa.parse("Original Earthquakes.csv", {
     function updateMap(selectedYear) {
         markerLayer.clearLayers(); 
         
-        allQuakes.forEach(function(row) {
-            if (row.time && row.time.startsWith(selectedYear)) {
-                var lat = Number(row.latitude);
-                var lon = Number(row.longitude);
-                var mag = Number(row.mag);
-                var depth = Number(row.depth);
+allQuakes.forEach(function(row) {
+    if (row.time && row.time.startsWith(selectedYear)) {
+        var lat = Number(row.latitude);
+        var lon = Number(row.longitude);
+        var mag = Number(row.mag);
 
-                if (isFinite(lat) && isFinite(lon)) {
-                    var marker = L.circleMarker([lat, lon], {
-                        radius: Math.max(mag * 2.5, 2), 
-                        fillColor: getColor(depth), // The high-contrast color
-                        color: "#333",              // Dark gray border for contrast
-                        weight: 0.5,                // Thin border line
-                        fillOpacity: 0.8            // Slightly more opaque for gray maps
-                    }).bindPopup(`
-                        <b>Year:</b> ${selectedYear}<br>
-                        <b>Magnitude:</b> ${mag}<br>
-                        <b>Depth:</b> ${depth} km
-                    `);
-                    
-                    markerLayer.addLayer(marker);
-                }
-            }
-        });
+        if (isFinite(lat) && isFinite(lon)) {
+            var marker = L.circleMarker([lat, lon], {
+                // Multiplier increased to 4 to make size differences more obvious
+                radius: Math.max(mag * 4, 2), 
+                fillColor: getColor(mag),    // Now using our new Magnitude color logic
+                color: "#000",               // Black border
+                weight: 1,
+                fillOpacity: 0.7
+            }).bindPopup(`<b>Magnitude:</b> ${mag}<br><b>Year:</b> ${selectedYear}`);
+            
+            markerLayer.addLayer(marker);
+        }
+    }
+});
+
     }
 
 // 9. Slider Event Listener
@@ -282,6 +276,4 @@ document.getElementById('yearSlider').addEventListener('input', function(e) {
 
 </body>
 
-
 </html>
-
