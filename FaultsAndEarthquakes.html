@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>GES 3050 - Final Project</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+
+    <style>
+        body {
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        #pagediv {
+            margin: 20px auto;
+            width: 95%;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 50px;
+        }
+
+        #headerdiv {
+            background-color: #1a365d;
+            color: white;
+            padding: 30px 20px;
+            border-bottom: 4px solid #cbd5e0;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; text-align: center; font-weight: 600; }
+
+        #contentdiv {
+            padding: 40px 10%;
+            line-height: 1.6;
+        }
+
+        h2 {
+            color: #2c5282;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        p { text-align: justify; font-size: 1.1rem; margin-bottom: 20px; }
+
+        .map-wrapper {
+            position: relative;
+            width: 85%;
+            height: 650px;
+            margin: 0 auto 40px auto;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .map-instance { width: 100%; height: 100%; }
+
+        .legend {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 15px;
+            font-size: 12px;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+        .legend h4 { margin: 0 0 6px; font-size: 14px; }
+        .legend div { margin-bottom: 4px; }
+        .legend span { display: inline-block; width: 14px; height: 14px; margin-right: 6px; border-radius: 50%; }
+
+        .footer-source {
+            padding: 0 10% 40px 10%;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="pagediv">
+
+    <div id="headerdiv">
+        <h1>Seismic Activity in California: Past, Present, and Future</h1>
+    </div>
+
+    <div id="contentdiv">
+        <h2>Introduction</h2>
+        <p>California’s history with earthquakes has been marked by devastating events that reshaped building practices and public safety. The 1906 San Francisco earthquake stands as the deadliest, killing around 3,000 people and destroying most of the city, while the 1994 Northridge earthquake caused enormous economic damage despite its smaller magnitude.</p>
+       
+        <p>Today, much of California’s population lives close to active faults such as the San Andreas and Hayward, facing significant ongoing risk and billions in potential annual losses. Residents are encouraged to stay prepared through tools like early warning apps and earthquake drills, especially as scientists warn the current “seismic drought” could end suddenly.</p>
+
+        <h2>Mapping Earthquakes and Fault Systems in California (2000–2025)</h2>
+        <p>The map below visualizes earthquake activity across California from 2000 to 2025 alongside the state’s major geological fault lines. By displaying both datasets together, users can explore not only where earthquakes occur, but how they spatially relate to underlying tectonic structures. The earthquake symbols are categorized by magnitude, allowing viewers to distinguish between smaller, more frequent tremors and larger, less common events, while the blue lines indicate mapped fault systems.</p>
+
+        <p>Viewed together, these layers reveal a clear spatial connection between seismic activity and California’s fault network. Many earthquakes cluster along major systems such as the San Andreas Fault along the coast, as well as inland zones like the Walker Lane near the Nevada border. At the same time, the map highlights that seismic activity is not confined to a single fault, but distributed across a complex and interconnected network of faults throughout the region. This reinforces the idea that earthquake risk in California is both widespread and structurally controlled.</p>
+    </div>
+
+    <div id="map-wrapper-1" class="map-wrapper">
+        <div id="map1" class="map-instance"></div>
+        <div class="legend">
+            <h4>Earthquake Magnitude</h4>
+            <div><span style="background:#fecc5c; width:10px; height:10px;"></span> M 4.4 – 4.69 (Light)</div>
+            <div><span style="background:#fd8d3c; width:13px; height:13px;"></span> M 4.7 – 4.99 (Moderate)</div>
+            <div><span style="background:#f03b20; width:16px; height:16px;"></span> M 5.0 – 5.49 (Strong)</div>
+            <div><span style="background:#bd0026; width:19px; height:19px;"></span> M 5.5 – 7.0+ (Major)</div>
+
+
+
+
+<hr style="margin:8px 0; border:0; border-top:1px solid #ccc;">
+
+<div style="display:flex; align-items:center;">
+    <span style="
+        display:inline-block;
+        width:18px;
+        height:3px;
+        background:#1f78b4;
+        margin-right:6px;
+        border-radius:1px;">
+    </span>
+    <h4>Geological Faults</h4>
+</div>
+
+    </div>
+
+
+
+
+    <div class="footer-source">
+        <p><b>Data Source:</b> <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">USGS Earthquake Catalog</a></p>
+    </div>
+
+</div>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2FydGVuemVpY2huZW4iLCJhIjoiY21tMHI1MDR0MDFueTJvbjZocDM3ejZieiJ9.G1QQK4LBG-VefDGlRUrokg';
+
+    var map1 = new mapboxgl.Map({
+        container: 'map1',
+        style: 'mapbox://styles/kartenzeichnen/cmm2cxq8o007b01suehnj5si1',
+        center: [-119.0, 37.2],
+        zoom: 5.0
+    });
+
+    map1.on('load', function () {
+
+     // --- FAULTS LAYER ---
+map1.addLayer({
+    'id': 'offshore_faults',
+    'type': 'line',
+    'source': {
+        'type': 'vector',
+        'url': 'mapbox://kartenzeichnen.2ncc1rkh'
+    },
+ 'source-layer': 'WGSqFaults_Offshore_California_03-22-2020',
+    'paint': {
+        'line-color': '#1f78b4',   // blue
+        'line-width': 4,
+        'line-opacity': 0.8
+    }
+});
+
+map1.addLayer({
+    'id': 'inland_faults',
+    'type': 'line',
+    'source': {
+        'type': 'vector',
+        'url': 'mapbox://kartenzeichnen.7sir6d88' 
+    },
+ 'source-layer': 'CA-Fault-2o50rw',
+    'paint': {
+        'line-color': '#1f78b4',   // blue
+        'line-width': 4,
+        'line-opacity': 0.8
+    }
+});
+
+
+       // --- EARTHQUAKES LAYER ---
+        map1.addLayer({
+            'id': 'Earthquakes',
+            'type': 'circle',
+            'source': { type: 'vector', url: 'mapbox://kartenzeichnen.01ruxtc9' },
+            'source-layer': 'Earthquakes-dn8qo8',
+            'paint': {
+                'circle-color': ['interpolate', ['linear'], ['get', 'mag'], 4.4, '#fecc5c', 4.7, '#fd8d3c', 5.0, '#f03b20', 5.5, '#bd0026'],
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 1,
+                'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, ['interpolate', ['linear'], ['get', 'mag'], 4.4, 6, 7, 18], 10, ['interpolate', ['linear'], ['get', 'mag'], 4.4, 15, 7, 45]]
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
