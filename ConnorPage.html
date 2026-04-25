@@ -1,0 +1,84 @@
+<html lang eng>
+
+<head>
+<meta charset="utf-8" />
+<title>Miclette Check-In 2</title>
+
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"> </script>
+
+<style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; };
+</style>
+
+</head>
+
+<body>
+<div id="map"></div>
+
+<script>
+
+    //Put your mapbox access token here
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaWtlbTk5IiwiYSI6ImNtbHNjMTI4eTA0cDQzZ29tdDIyaHpmOTgifQ.qrMNz0gdBNLxfVnnFIFO4g';  
+
+        // Load a new map in the 'map' HTML div
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/ikem99/cmo0a8tkn005801rg7jgq4m6m', // Put your mapbox style ID here
+            center: [-119.0 , 37.2], // starting position [lng, lat]
+            zoom: 5.5 // starting zoom
+        });
+
+
+        // When loading the map
+        map.on('load', function() {
+
+
+            // Add fault data layers
+            map.addLayer({
+                'id':'offshore_faults',
+                'type':'line',
+                'source':{
+                    type:'vector',
+                    url:'ikem99.17sep66n' // After "mapbox://" paste your Mapbox tileset ID
+                },
+                'source-layer':'wgsqfaults-offshore-california-03-22-2020', // name of tilesets
+                'layout':{
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'line-color':'#86b049',
+                    'line-opacity':1,
+                    'line-width':0.5,
+                    'line-opacity':0.5,
+                }
+            });
+            
+            map.addLayer({
+                'id':'inland_faults',
+                'type':'line',
+                'source':{
+                    type:'vector',
+                    url:'ikem99.3r0c75ip' // After "mapbox://" paste your Mapbox tileset ID
+                },
+                'source-layer':'ca-fault-7qq3uv', // name of tilesets
+                'layout':{
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'line-color':'#86b049',
+                    'line-opacity':1,
+                    'line-width':0.5,
+                    'line-opacity':0.5,
+                    
+                }
+            });
+
+        })
+
+</script>
+
+</body>
+</html>
