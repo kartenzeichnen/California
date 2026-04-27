@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8">
-    <title>Scrollama Multi-Map Story</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Scrollama: Map Storytelling</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/d3@5.9.1/dist/d3.min.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
     <style>
         body {
@@ -16,60 +19,66 @@
         #scrolly {
             position: relative;
             display: flex;
+            background-color: #f0f2f5;
             padding: 1rem;
         }
 
         article {
             position: relative;
             padding: 0 1rem;
-            width: 35%;
+            width: 35%; /* Fixed width for the text column */
+            max-width: 30rem;
         }
 
-        .sticky-graphic {
+        figure {
             position: -webkit-sticky;
             position: sticky;
-            width: 65%;
-            height: 90vh;
-            top: 5vh;
-            background-color: #fff;
+            width: 65%; /* Takes up the remaining space */
+            height: 80vh; /* Adjusted by JS handleResize */
+            margin: 0;
+            top: 10vh;
+            background-color: #ddd;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden; /* Keeps the iframe corners neat */
+            overflow: hidden;
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
-            transition: opacity 0.3s ease;
         }
 
         .step {
             margin: 0 auto 2rem auto;
-            margin-bottom: 90vh; /* Extra space to ensure clean transitions */
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            padding: 30px;
+            padding: 2rem;
             opacity: 0.2;
             transition: all 0.5s;
         }
 
         .step.is-active {
             opacity: 1;
-            border-left: 5px solid #007bff; /* Visual cue for the active step */
+            border-left: 5px solid #007bff;
         }
 
-        h2 { margin-top: 0; color: #007bff; }
+        .step h2 {
+            margin-top: 0;
+            color: #007bff;
+        }
 
-        /* Smooth appearance for the iframe */
-        .fade-out { opacity: 0; }
+        .intro, .outro {
+            text-align: center;
+            padding: 15vh 10vw;
+        }
     </style>
 </head>
-<body>
 
+<body>
     <main>
-        <section style="padding: 15vh 10vw; text-align: center;">
+        <section class="intro">
 <h1>
 Seismic Activity in California: Past, Present, and Future
 </h1>
@@ -88,14 +97,9 @@ California’s history with earthquakes has been marked by devastating events th
 <p>
 Today, much of California’s population lives close to active faults such as the San Andreas and Hayward, facing significant ongoing risk and billions in potential annual losses. Residents are encouraged to stay prepared through tools like early warning apps and earthquake drills, especially as scientists warn the current “seismic drought” could end suddenly.
 </p>
-
         </section>
 
         <section id="scrolly">
-            <div class="sticky-graphic">
-                <iframe id="map-frame" src="https://kartenzeichnen.github.io/California/ConnorPage.html"></iframe>
-            </div>
-
             <article>
 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
@@ -104,13 +108,11 @@ Today, much of California’s population lives close to active faults such as th
     <!-- 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
+
                 <div class="step" data-src="https://kartenzeichnen.github.io/California/ConnorPage.html">
                     <h2>California Fault Systems</h2>
                     <p>The map displays California with a detailed network of geological fault lines.  The map illustrates the complex seismic environment that shapes California’s earthquake risk.</p>
                 </div>
-
-
-
 
 
 
@@ -120,19 +122,19 @@ Today, much of California’s population lives close to active faults such as th
     <!-- 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
+
                 <div class="step" data-src="https://kartenzeichnen.github.io/California/GeorgPage.html">
                     <h2>Mapping California’s Recent Seismic Activity</h2>
 <p>
 In order to better understand earthquakes in California, it is essential to examine where seismic activity has occurred over recent decades. Mapping earthquake events from 2000 to 2025 reveals spatial patterns that are not immediately apparent in raw datasets. By visualizing these events, we can better understand how earthquake distribution is linked to the state’s complex tectonic setting and underlying fault systems.
 </p>
 <p>
-The interactive map to the left provides a dynamic representation of earthquake activity across California during this period. Users can explore how these seismic events reveal clusters of activity. The map’s legend categorizes earthquakes by magnitude, helping distinguish between smaller, more frequent events and larger, less common ones, while also emphasizing the scale and intensity of seismic hazards.
+The interactive map to the right provides a dynamic representation of earthquake activity across California during this period. Users can explore how these seismic events reveal clusters of activity. The map’s legend categorizes earthquakes by magnitude, helping distinguish between smaller, more frequent events and larger, less common ones, while also emphasizing the scale and intensity of seismic hazards.
 </p>
 <p>
 These patterns demonstrate that California’s seismic activity is concentrated along major fault systems. The San Andreas Fault dominates along the coast, while additional clusters of earthquakes appear inland along the Walker Lane near the Nevada border. Together, these zones illustrate that seismic risk in California is not confined to a single fault, but instead distributed across a broad and interconnected tectonic network.
 </p>
-</div>
-
+                </div>
 
 
 
@@ -144,15 +146,14 @@ These patterns demonstrate that California’s seismic activity is concentrated 
     <!-- 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
+
+
+
+
                 <div class="step" data-src="https://kartenzeichnen.github.io/California/SethPage.html">
                     <h2>Choropleth Map of California Showing Density of Earthquakes by County</h2>
-                    <p>The map to the left portrays the counties that are most likely to suffer damages from seismic activity.</p>
+                    <p>The map to the right portrays the counties that are most likely to suffer damages from seismic activity.</p>
                 </div>
-
-
-
-
-
 
 
 
@@ -162,10 +163,14 @@ These patterns demonstrate that California’s seismic activity is concentrated 
     <!-- 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
+
+
+
                 <div class="step" data-src="https://kartenzeichnen.github.io/California/ClairePage.html">
                     <h2>Choropleth Map of California Showing Population Density</h2>
-                    <p>The map on the left shows the most populated California cities, which coincidentally lie on fault lines, making them more vulnerable to severe human and infrastructure losses from seismic activity.</p>
+                    <p>The map on the right shows the most populated California cities, which coincidentally lie on fault lines, making them more vulnerable to severe human and infrastructure losses from seismic activity.</p>
                 </div>
+
 
 
 
@@ -177,9 +182,13 @@ These patterns demonstrate that California’s seismic activity is concentrated 
 
 
             </article>
+
+            <figure>
+                <iframe id="map-frame" src="https://kartenzeichnen.github.io/California/ConnorPage.html"></iframe>
+            </figure>
         </section>
 
-        <section style="padding: 20vh 5vw; text-align: center; color: #888;">
+        <section class="outro">
             <h2>Conclusions and Strategic Findings</h2>
 
                     <p><b>
@@ -199,36 +208,79 @@ Call for Proactive Mitigation: </b>
 Highlights that comprehensive mapping of the seismic landscape is essential for informing targeted policy interventions, building retrofits, and life-saving preparedness strategies.</p>
 
         </section>
-
     </main>
 
+
+
+
+
+
+
+
+
     <script>
-        const scroller = scrollama();
-        const mapFrame = document.getElementById("map-frame");
+        // Use D3 to select elements
+        var main = d3.select("main");
+        var scrolly = main.select("#scrolly");
+        var figure = scrolly.select("figure");
+        var article = scrolly.select("article");
+        var step = article.selectAll(".step");
+        var mapFrame = d3.select("#map-frame");
 
-        scroller
-            .setup({
-                step: "#scrolly article .step",
-                offset: 0.5,
-                debug: false
-            })
-            .onStepEnter((response) => {
-                // Add active class
-                response.element.classList.add("is-active");
+        // Initialize scrollama
+        var scroller = scrollama();
 
-                // Get the URL from the data-src attribute
-                const newSrc = response.element.getAttribute("data-src");
-                
-                // Update the iframe source ONLY if it's different (prevents flickering)
-                if (mapFrame.src !== newSrc) {
-                    mapFrame.src = newSrc;
-                }
-            })
-            .onStepExit((response) => {
-                response.element.classList.remove("is-active");
+        // This function handles window resizing to keep the layout perfect
+        function handleResize() {
+            // 1. Update height of step elements
+            var stepH = Math.floor(window.innerHeight * 0.8);
+            step.style("height", stepH + "px");
+
+            var figureHeight = window.innerHeight * 0.8;
+            var figureMarginTop = (window.innerHeight - figureHeight) / 2;
+
+            figure
+                .style("height", figureHeight + "px")
+                .style("top", figureMarginTop + "px");
+
+            // 3. Tell scrollama to update new element dimensions
+            scroller.resize();
+        }
+
+        // This function runs every time a step enters the center of the screen
+        function handleStepEnter(response) {
+            // Highlight current step
+            step.classed("is-active", function (d, i) {
+                return i === response.index;
             });
 
-        window.addEventListener("resize", scroller.resize);
+            // Update the iframe source based on the data-src attribute of the current step
+            var newSrc = response.element.getAttribute("data-src");
+            if (mapFrame.attr("src") !== newSrc) {
+                mapFrame.attr("src", newSrc);
+            }
+        }
+
+        function init() {
+            // 1. Force a resize on load to ensure proper dimensions
+            handleResize();
+
+            // 2. Setup the scroller
+            scroller
+                .setup({
+                    step: "#scrolly article .step",
+                    offset: 0.5, // Trigger when step is halfway up the screen
+                    debug: false
+                })
+                .onStepEnter(handleStepEnter);
+
+            // Setup resize event listener
+            window.addEventListener("resize", scroller.resize);
+        }
+
+        // Kick things off
+        init();
     </script>
 </body>
+
 </html>
