@@ -8,14 +8,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://unpkg.com/d3@5.9.1/dist/d3.min.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
+
     <style>
+        /* =========================
+           GLOBAL TYPOGRAPHY SYSTEM
+        ========================= */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
             color: #333;
+            line-height: 1.6;
         }
 
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: #222;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* =========================
+           INTRO / OUTRO SECTIONS
+        ========================= */
+        .intro, .outro {
+            text-align: center;
+            padding: 12vh 10vw;
+        }
+
+        .intro h1 {
+            font-size: 2.75rem;
+        }
+
+        .intro h2,
+        .outro h2 {
+            font-size: 2rem;
+            color: #111;
+        }
+
+        .intro p,
+        .outro p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* =========================
+           SCROLLY LAYOUT
+        ========================= */
         #scrolly {
             position: relative;
             display: flex;
@@ -26,15 +76,14 @@
         article {
             position: relative;
             padding: 0 1rem;
-            width: 35%; /* Fixed width for the text column */
+            width: 35%;
             max-width: 30rem;
         }
 
         figure {
-            position: -webkit-sticky;
             position: sticky;
-            width: 65%; /* Takes up the remaining space */
-            height: 80vh; /* Adjusted by JS handleResize */
+            width: 65%;
+            height: 80vh;
             margin: 0;
             top: 10vh;
             background-color: #ddd;
@@ -49,13 +98,16 @@
             border: none;
         }
 
+        /* =========================
+           STEP (MAP TEXT PANELS)
+        ========================= */
         .step {
             margin: 0 auto 2rem auto;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             padding: 2rem;
-            opacity: 0.2;
+            opacity: 0.4;
             transition: all 0.5s;
         }
 
@@ -65,38 +117,34 @@
         }
 
         .step h2 {
-            margin-top: 0;
+            font-size: 1.5rem;
             color: #007bff;
+            margin-top: 0;
         }
 
-        .intro, .outro {
-            text-align: center;
-            padding: 15vh 10vw;
+        .step p {
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
     </style>
 </head>
 
 <body>
     <main>
+
         <section class="intro">
-<h1>
-Seismic Activity in California: Past, Present, and Future
-</h1>
-<p>
-Group One: Claire, Connor, Seth, and Georg
-</p>
+            <h1>Seismic Activity in California: Past, Present, and Future</h1>
+            <p>Group One: Claire, Connor, Seth, and Georg</p>
 
-<h2>
-Introduction
-</h2>
+            <h2>Introduction</h2>
 
-<p>
-California’s history with earthquakes has been marked by devastating events that reshaped building practices and public safety. The 1906 San Francisco earthquake stands as the deadliest, killing around 3,000 people and destroying most of the city, while the 1994 Northridge earthquake caused enormous economic damage despite its smaller magnitude.
-</p>
+            <p>
+                California’s history with earthquakes has been marked by devastating events that reshaped building practices and public safety. The 1906 San Francisco earthquake stands as the deadliest, killing around 3,000 people and destroying most of the city, while the 1994 Northridge earthquake caused enormous economic damage despite its smaller magnitude.
+            </p>
 
-<p>
-Today, much of California’s population lives close to active faults such as the San Andreas and Hayward, facing significant ongoing risk and billions in potential annual losses. Residents are encouraged to stay prepared through tools like early warning apps and earthquake drills, especially as scientists warn the current “seismic drought” could end suddenly.
-</p>
+            <p>
+                Today, much of California’s population lives close to active faults such as the San Andreas and Hayward, facing significant ongoing risk and billions in potential annual losses. Residents are encouraged to stay prepared through tools like early warning apps and earthquake drills, especially as scientists warn the current “seismic drought” could end suddenly.
+            </p>
         </section>
 
         <section id="scrolly">
@@ -203,18 +251,10 @@ Call for Proactive Mitigation: </b>
 Highlights that comprehensive mapping of the seismic landscape is essential for informing targeted policy interventions, building retrofits, and life-saving preparedness strategies.</p>
 
         </section>
+
     </main>
 
-
-
-
-
-
-
-
-
     <script>
-        // Use D3 to select elements
         var main = d3.select("main");
         var scrolly = main.select("#scrolly");
         var figure = scrolly.select("figure");
@@ -264,7 +304,7 @@ Highlights that comprehensive mapping of the seismic landscape is essential for 
             scroller
                 .setup({
                     step: "#scrolly article .step",
-                    offset: 0.5, // Trigger when step is halfway up the screen
+                    offset: 0.5,
                     debug: false
                 })
                 .onStepEnter(handleStepEnter);
