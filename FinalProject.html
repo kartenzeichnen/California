@@ -108,16 +108,14 @@ Today, much of California’s population lives close to active faults such as th
     <!-- 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
-
                 <div class="step" data-src="https://ikem99.github.io/GES_3050/Miclette_Checkin3_Revision1.html">
                     <h2>California Fault Systems</h2>
-                                        <p>This interactive map provides a focused look at California’s complex seismic landscape by centering on the state's coordinates with a broad, high-level zoom. Built using the Mapbox GL JS framework, the visualization features a custom geographic style that highlights the physical terrain. My visualization serves to create context explaining why California is prone to earthquakes. By presenting the state in its tectonic entirety, the map allows viewers to see the sheer density of geological features that define the region's active landscape.</p>
+                    <p>This interactive map provides a focused look at California’s complex seismic landscape by centering on the state's coordinates with a broad, high-level zoom. Built using the Mapbox GL JS framework, the visualization features a custom geographic style that highlights the physical terrain. My visualization serves to create context explaining why California is prone to earthquakes. By presenting the state in its tectonic entirety, the map allows viewers to see the sheer density of geological features that define the region's active landscape.</p>
 
 <p>The map specifically utilizes a vector tileset to render offshore fault lines, colored in a distinct green to separate them from the surrounding seafloor. Interspersed across the map are large, stylized arrows (blue pointing northwest and magenta pointing southeast) that represent the relative motion of the Pacific and North American plates. Showing fault lines and a high-level perspective of tectonic plate movement provides information about why earthquakes occur near major cities in the state, such as Los Angeles, which is set as the map's initial focal point.</p>
 
 <p>To help the viewer interpret these data layers, a clean, white legend is positioned in the bottom-left corner. This legend clarifies the distinction between tectonic forces and the specific fault structures they create. Denoting the separation of off-shore and on-shore faults along with their movement can also help explain the severity of earthquakes and related disasters such as tsunamis and landslides. By combining these visual elements, the map transforms abstract geological data into a clear narrative about the constant motion and potential hazards inherent to the California coast.</p>
                 </div>
-
 
 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
@@ -126,21 +124,30 @@ Today, much of California’s population lives close to active faults such as th
     <!-- 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
-
                 <div class="step" data-src="https://kartenzeichnen.github.io/California/GeorgPage.html">
                     <h2>Mapping California’s Recent Seismic Activity</h2>
 <p>
-In order to better understand earthquakes in California, it is essential to examine where seismic activity has occurred over recent decades. Mapping earthquake events from 2000 to 2025 reveals spatial patterns that are not immediately apparent in raw datasets. By visualizing these events, we can better understand how earthquake distribution is linked to the state’s complex tectonic setting and underlying fault systems.
-</p>
-<p>
-The interactive map to the right provides a dynamic representation of earthquake activity across California during this period. Users can explore how these seismic events reveal clusters of activity. The map’s legend categorizes earthquakes by magnitude, helping distinguish between smaller, more frequent events and larger, less common ones, while also emphasizing the scale and intensity of seismic hazards.
-</p>
-<p>
-These patterns demonstrate that California’s seismic activity is concentrated along major fault systems. The San Andreas Fault dominates along the coast, while additional clusters of earthquakes appear inland along the Walker Lane near the Nevada border. Together, these zones illustrate that seismic risk in California is not confined to a single fault, but instead distributed across a broad and interconnected tectonic network.
+To better understand earthquakes in California, it helps to examine where seismic activity has occurred over the past few decades. Mapping events from 2000 to 2025 reveals spatial patterns that are difficult to detect in raw datasets alone. Visualizing this information highlights how earthquake distribution relates to the state’s complex tectonic environment and interconnected fault systems, offering clearer insight into where and why earthquakes tend to occur.</p>
+
+<p>The interactive map to the right illustrates these patterns by showing clusters of seismic activity across the state. Its legend categorizes earthquakes by magnitude, distinguishing frequent smaller events from rarer, more powerful ones. The results show that seismic activity is concentrated along major fault zones, including coastal and inland regions, demonstrating that earthquake risk in California is widespread rather than limited to a single fault.
 </p>
                 </div>
 
 
+    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+    <!-- 
+    <!-- Section dedicated exclusively for Claire's data -->
+    <!-- 
+    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
+                <div class="step" data-src="https://69dragonfly.github.io/Cartography-Group-One-Project-Map-Claire/Cartography_GroupONE_Map_Claire.html">
+                    <h2>Urban Concentration and Seismic Risk in California: A 2020 Census-Based Visualization</h2>
+                    <p>For my individual visualization, I selected a dataset that maps urbanized areas across California using data from the 2020 U.S. Census, sourced from the California State Geoportal. The topic of this visualization aligns with our broader project focus on seismic risk and earthquake preparedness, as it highlights where the state’s population is most concentrated.</p>
+
+ <p>The base map provides geographic context for California, while the thematic layer displays urban areas, symbolized in a bright color to enhance visibility and distinguish population centers. This stylistic choice helps emphasize the spatial distribution of densely populated regions. To emphasize the seismic risk in urban areas, I created a circle with a popup that gives the population of that city or metropolitan area per the 2020 U.S Census. (Census.gov) I chose areas roughly 1-2 latitudes apart along the California coast. I used Chat GPT to help create the interactive popups.</p>
+
+  <p>For the analysis component, this map is particularly effective in illustrating the relationship between population centers and California’s active fault systems. A significant portion, 70%,  of the state’s population resides in close proximity to major fault lines, reinforcing the idea that seismic risk is not evenly distributed but concentrated in highly urbanized areas. This visualization supports our overall argument by demonstrating how California’s geological activity directly intersects with where people live, increasing the potential impact of earthquake events.</p>
+                </div>
 
 
 
@@ -150,10 +157,6 @@ These patterns demonstrate that California’s seismic activity is concentrated 
     <!-- 
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
 
-
-
-
-
                 <div class="step" data-src="https://seths8009.github.io/Carto_SethSpeas/SSpeas Final Proj Map.html">
                     <h2>Mapping Annualized Earthquake Loss Across California’s Counties: An Interactive Dashboard</h2>
                     <p>The website presents an interactive map focused on visualizing Annualized Earthquake Loss (AEL) across counties in California. Built using Mapbox GL JS, the map displays county-level data derived from a vector tileset, allowing users to explore how earthquake-related financial risk varies geographically. The dark-themed basemap provides a clean, modern backdrop, while the highlighted county polygons emphasize spatial patterns in estimated economic loss. The initial map view is zoomed out to a national perspective, but the data itself specifically represents California’s counties.</p>
@@ -161,26 +164,6 @@ These patterns demonstrate that California’s seismic activity is concentrated 
 <p>Interactivity is a central feature of the map. When a user clicks on a county, a sidebar opens displaying detailed information, including the county name and its estimated annualized earthquake loss in U.S. dollars. The selected county is simultaneously highlighted on the map with a distinct fill and outline, reinforcing the connection between the geographic feature and its associated data. A horizontal bar indicator within the sidebar visually represents the relative magnitude of loss compared to a predefined maximum, helping users quickly interpret the severity of risk across different counties.</p>
 
 <p>The interface also includes additional usability and design elements that enhance the overall experience. A tabbed layout allows for multiple maps to be displayed within the same dashboard. Navigation controls such as zoom, pan, and fullscreen mode are integrated directly into the map, making it easy to explore spatial patterns. Altogether, the map effectively communicates how earthquake risk is distributed across California, emphasizing areas where potential economic impacts are greatest.</p>
-                </div>
-
-
-
-    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
-    <!-- 
-    <!-- Section dedicated exclusively for Claire's data -->
-    <!-- 
-    <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
-
-
-
-
-                <div class="step" data-src="https://69dragonfly.github.io/Cartography-Group-One-Project-Map-Claire/Cartography_GroupONE_Map_Claire.html">
-                    <h2>Urban Concentration and Seismic Risk in California: A 2020 Census-Based Visualization</h2>
-                    <p>For my individual visualization, I selected a dataset that maps urbanized areas across California using data from the 2020 U.S. Census, sourced from the California State Geoportal. The topic of this visualization aligns with our broader project focus on seismic risk and earthquake preparedness, as it highlights where the state’s population is most concentrated.</p>
-
- <p>The base map provides geographic context for California, while the thematic layer displays urban areas, symbolized in a bright color to enhance visibility and distinguish population centers. This stylistic choice helps emphasize the spatial distribution of densely populated regions. To emphasize the seismic risk in urban areas, I created a circle with a popup that gives the population of that city or metropolitan area per the 2020 U.S Census. (Census.gov) I chose areas roughly 1-2 latitudes apart along the California coast. I used Chat GPT to help create the interactive popups.</p>
-
-  <p>For the analysis component, this map is particularly effective in illustrating the relationship between population centers and California’s active fault systems. A significant portion, 70%,  of the state’s population resides in close proximity to major fault lines, reinforcing the idea that seismic risk is not evenly distributed but concentrated in highly urbanized areas. This visualization supports our overall argument by demonstrating how California’s geological activity directly intersects with where people live, increasing the potential impact of earthquake events.</p>
                 </div>
 
 
