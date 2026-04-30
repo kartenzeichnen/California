@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -6,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Scrollama: Map Storytelling</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/d3@5.9.1/dist/d3.min.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
 
@@ -15,26 +17,35 @@
         ========================= */
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
-            color: #333;
-            line-height: 1.6;
+            color: #2b2b2b;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.02em;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: 600;
             margin-bottom: 1rem;
         }
 
         h2 {
-            font-size: 1.75rem;
+            font-size: 1.8rem;
+            font-weight: 500;
             margin-bottom: 0.75rem;
             color: #222;
         }
 
         p {
-            font-size: 1rem;
+            font-size: 1.05rem;
             margin-bottom: 1rem;
+            max-width: 65ch;
         }
 
         /* =========================
@@ -118,7 +129,7 @@
 
         .step h2 {
             font-size: 1.5rem;
-            color: #007bff;
+            color: #3a6ea5;
             margin-top: 0;
         }
 
@@ -175,9 +186,9 @@
                 <div class="step" data-src="https://kartenzeichnen.github.io/California/GeorgPage.html">
                     <h2>Mapping California’s Recent Seismic Activity</h2>
 <p>
-To better understand earthquakes in California, it helps to examine where seismic activity has occurred over the past few decades. Mapping events from 2000 to 2025 reveals spatial patterns that are difficult to detect in raw datasets alone. This interactive visualization not only displays earthquake locations across the state, but also allows users to explore them through a guided “fly-through” sequence—from a statewide view to specific regions of interest—providing a more immersive way to observe how seismic activity is distributed across California’s complex tectonic landscape.
-</p>
-<p>The interactive map illustrates these patterns by showing clusters of seismic activity across the state, while its legend categorizes earthquakes by magnitude, distinguishing frequent smaller events from rarer, more powerful ones. Using the fly feature, users can zoom in from a broad view of California to northern regions near Eureka and then to southern areas near China Lake, highlighting how earthquake activity varies geographically. This reinforces that seismic hazards are not confined to a single fault zone but are widespread across both coastal and inland regions.
+To better understand earthquakes in California, it helps to examine where seismic activity has occurred over the past few decades. Mapping events from 2000 to 2025 reveals spatial patterns that are difficult to detect in raw datasets alone. Visualizing this information highlights how earthquake distribution relates to the state’s complex tectonic environment and interconnected fault systems, offering clearer insight into where and why earthquakes tend to occur.</p>
+
+<p>The interactive map to the right illustrates these patterns by showing clusters of seismic activity across the state. Its legend categorizes earthquakes by magnitude, distinguishing frequent smaller events from rarer, more powerful ones. The results show that seismic activity is concentrated along major fault zones, including coastal and inland regions, demonstrating that earthquake risk in California is widespread rather than limited to a single fault.
 </p>
                 </div>
 
@@ -198,7 +209,6 @@ To better understand earthquakes in California, it helps to examine where seismi
                 </div>
 
 
-
     <!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
     <!-- 
     <!-- Section dedicated exclusively for Seth's data -->
@@ -215,14 +225,11 @@ To better understand earthquakes in California, it helps to examine where seismi
                 </div>
 
 
-
-
     <!-- XXXXXXXXXXXXXXXX  -->
     <!-- 
     <!-- End of group member's data  -->
     <!-- 
     <!-- XXXXXXXXXXXXXXXX  -->
-
 
             </article>
 
