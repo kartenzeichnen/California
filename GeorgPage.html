@@ -39,92 +39,143 @@
             border-radius: 3px;
             z-index: 1;
         }
+
+        #fly {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            background: #ee8a65;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
 
-    <div id="map"></div>
+<div id="map"></div>
+<button id="fly">Start Tour</button>
 
-    <div class="legend">
-        <h4>Earthquake Magnitude</h4>
-        <div><span style="background:#fecc5c; width:10px; height:10px;"></span> M 4.4 – 4.69 (Light)</div>
-        <div><span style="background:#fd8d3c; width:13px; height:13px;"></span> M 4.7 – 4.99 (Moderate)</div>
-        <div><span style="background:#f03b20; width:16px; height:16px;"></span> M 5.0 – 5.49 (Strong)</div>
-        <div><span style="background:#bd0026; width:19px; height:19px;"></span> M 5.5 – 7.0+ (Major)</div>
-    </div>
+<div class="legend">
+    <h4>Earthquake Magnitude</h4>
+    <div><span style="background:#fecc5c; width:10px; height:10px;"></span> M 4.4 – 4.69 (Light)</div>
+    <div><span style="background:#fd8d3c; width:13px; height:13px;"></span> M 4.7 – 4.99 (Moderate)</div>
+    <div><span style="background:#f03b20; width:16px; height:16px;"></span> M 5.0 – 5.49 (Strong)</div>
+    <div><span style="background:#bd0026; width:19px; height:19px;"></span> M 5.5 – 7.0+ (Major)</div>
+</div>
 
-    <div class="footer-source">
-        <p><b>Data Source:</b> <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">USGS Earthquake Catalog</a></p>
-    </div>
+<div class="footer-source">
+    <p><b>Data Source:</b> <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">USGS Earthquake Catalog</a></p>
+</div>
 
-    <script>
+<script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoia2FydGVuemVpY2huZW4iLCJhIjoiY21tMHI1MDR0MDFueTJvbjZocDM3ejZieiJ9.G1QQK4LBG-VefDGlRUrokg';
 
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/kartenzeichnen/cmm2cxq8o007b01suehnj5si1',
-            center: [-119.0, 37.0],
-            zoom: 5.0
-        });
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/kartenzeichnen/cmm2cxq8o007b01suehnj5si1',
+    center: [-119.0, 37.0], // Full California view
+    zoom: 5.0
+});
 
-        map.on('load', function () {
-            map.addLayer({
-                'id': 'Earthquakes',
-                'type': 'circle',
-                'source': {
-                    'type': 'vector',
-                    'url': 'mapbox://kartenzeichnen.01ruxtc9'
-                },
-                'source-layer': 'Earthquakes-dn8qo8',
-                'paint': {
-                    'circle-color': [
-                        'interpolate', ['linear'], ['get', 'mag'],
-                        4.4, '#fecc5c',
-                        4.7, '#fd8d3c',
-                        5.0, '#f03b20',
-                        5.5, '#bd0026'
-                    ],
-                    'circle-stroke-color': '#ffffff',
-                    'circle-stroke-width': 1,
-                    'circle-radius': [
-                        'interpolate', ['linear'], ['zoom'],
-                        5, ['interpolate', ['linear'], ['get', 'mag'], 4.4, 6, 7, 18],
-                        10, ['interpolate', ['linear'], ['get', 'mag'], 4.4, 15, 7, 45]
-                    ]
-                }
+// Locations
+const california = [-119.0, 37.0];
+const eureka = [-124.16, 40.80];
+const chinaLake = [-117.68, 35.69];
+
+// Step tracker
+let step = 0;
+
+map.on('load', function () {
+
+    map.addLayer({
+        'id': 'Earthquakes',
+        'type': 'circle',
+        'source': {
+            'type': 'vector',
+            'url': 'mapbox://kartenzeichnen.01ruxtc9'
+        },
+        'source-layer': 'Earthquakes-dn8qo8',
+        'paint': {
+            'circle-color': [
+                'interpolate', ['linear'], ['get', 'mag'],
+                4.4, '#fecc5c',
+                4.7, '#fd8d3c',
+                5.0, '#f03b20',
+                5.5, '#bd0026'
+            ],
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-width': 1,
+            'circle-radius': [
+                'interpolate', ['linear'], ['zoom'],
+                5, ['interpolate', ['linear'], ['get', 'mag'], 4.4, 6, 7, 18],
+                10, ['interpolate', ['linear'], ['get', 'mag'], 4.4, 15, 7, 45]
+            ]
+        }
+    });
+
+    // Popup
+    map.on('click', 'Earthquakes', (e) => {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const magnitude = e.features[0].properties.mag;
+        const place = e.features[0].properties.place || "California";
+
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(`<strong>Magnitude: ${magnitude}</strong><br>Location: ${place}`)
+            .addTo(map);
+    });
+
+    // Cursor change
+    map.on('mouseenter', 'Earthquakes', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'Earthquakes', () => {
+        map.getCanvas().style.cursor = '';
+    });
+
+    // Fly sequence
+    document.getElementById('fly').addEventListener('click', () => {
+
+        if (step === 0) {
+            map.flyTo({
+                center: eureka,
+                zoom: 7,
+                speed: 0.8,
+                curve: 1.4,
+                essential: true
             });
-
-            // INTERACTIVITY: Click Event
-            map.on('click', 'Earthquakes', (e) => {
-                // Get features and coordinates
-                const coordinates = e.features[0].geometry.coordinates.slice();
-                const magnitude = e.features[0].properties.mag;
-                const place = e.features[0].properties.place || "California";
-
-                // Ensure the popup appears over the copy being pointed to if zoomed out
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
-
-                // Create the popup
-                new mapboxgl.Popup()
-                    .setLngLat(coordinates)
-                    .setHTML(`<strong>Magnitude: ${magnitude}</strong><br>Location: ${place}`)
-                    .addTo(map);
+        } 
+        else if (step === 1) {
+            map.flyTo({
+                center: chinaLake,
+                zoom: 7,
+                speed: 0.8,
+                curve: 1.4,
+                essential: true
             });
-
-            // Change the cursor to a pointer when the mouse is over the earthquakes layer.
-            map.on('mouseenter', 'Earthquakes', () => {
-                map.getCanvas().style.cursor = 'pointer';
+        } 
+        else {
+            map.flyTo({
+                center: california,
+                zoom: 5,
+                speed: 0.8,
+                curve: 1.4,
+                essential: true
             });
+        }
 
-            // Change it back to a pointer when it leaves.
-            map.on('mouseleave', 'Earthquakes', () => {
-                map.getCanvas().style.cursor = '';
-            });
-        });
-    </script>
+        step = (step + 1) % 3; // cycle through 0 → 1 → 2 → 0
+    });
+
+});
+</script>
 
 </body>
 </html>
